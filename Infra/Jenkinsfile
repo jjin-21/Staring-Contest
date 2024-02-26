@@ -1,0 +1,121 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'NodeJS 20.10.0'
+    }
+
+    environment {
+        HOME_PATH = '/home/ubuntu'
+    }
+
+    stages {
+        stage('Check Changes') {
+            steps {
+                script {
+                    // 마지막 성공한 빌드 이후 변경된 파일 목록을 가져옴
+                    def changedFiles = sh(script: "git diff --name-only HEAD \$(git rev-parse HEAD~1)", returnStdout: true).trim()
+                    // 변경된 파일이 백엔드 디렉토리 내에 있는지 확인
+                    env.BUILD_BE = changedFiles.contains("BE/") ? "true" : "false"
+                    // 변경된 파일이 프론트엔드 디렉토리 내에 있는지 확인
+                    env.BUILD_FE = changedFiles.contains("FE/") ? "true" : "false"
+                    // 변경된 파일이 FastAPI 디렉토리 내에 있는지 확인
+                    env.BUILD_FastAPI = changedFiles.contains("FastAPI/") ? "true" : "false"
+                }
+            }
+        }
+        stage('Build BE') {
+            when {
+                expression { env.BUILD_BE == "true" }
+            }
+            steps {
+                echo 'Building Back-End...'
+                // 백엔드 소스코드가 있는 경로로 이동
+                dir('BE') {
+                    // Docker 이미지 빌드 명령어
+                    sh 'docker build -t spring-app:test .'
+                }
+            }
+        }
+
+        stage('Build FE') {
+            when {
+                expression { env.BUILD_FE == "true" }
+            }
+            steps {
+                echo 'Building Front-End...'
+                // 백엔드 소스코드가 있는 경로로 이동
+                // dir('FE') {
+                //     // Docker 이미지 빌드 명령어
+                //     sh 'docker build -t react-app:test .'
+                // }
+                dir('FE') {
+                        sh "rm -rf node_modules package-lock.json"
+                        sh "npm install"
+                        // Build the project using npm
+                        sh "CI=false npm run build"
+                    }
+            }
+        }
+
+        stage('Compression FE') {
+            when {
+                expression { env.BUILD_FE == "true" }
+            }
+            steps {
+                dir('FE') {
+                    sh '''
+                    rm -rf node_modules
+                    tar -cvf dist.tar dist
+                    '''
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // 테스트 관련 작업을 여기에 추가
+                echo 'Test는 일단 패스'
+            }
+        }
+
+        stage('Deploy BE') {
+            when {
+                expression { env.BUILD_BE == "true" }
+            }
+            steps {
+                // 배포 관련 작업을 여기에 추가
+                echo 'Deploying BE...'
+                // 빌드가 진행되면 기존의 컨테이너 중지 및 제거 & 컨테이너가 없어도 실패하지 않고계속 수행
+                sh 'docker stop spring-app || true'
+                sh 'docker rm spring-app || true'
+                // 백엔드 이미지 실행
+                sh 'docker run -d -p 8787:8787 --name spring-app spring-app:test'
+            }
+        }
+        
+        stage('Deploy FE') {
+            when {
+                expression { env.BUILD_FE == "true" }
+            }
+            steps {
+                // // 배포 관련 작업을 여기에 추가
+                echo 'Deploying FE...'
+                // echo '제발'
+                // // 빌드가 진행되면 기존의 컨테이너 중지 및 제거 & 컨테이너가 없어도 실패하지 않고계속 수행
+                // sh 'docker stop react-app || true'
+                // sh 'docker rm react-app || true'
+                // // 프론트엔드 이미지 실행
+                // sh 'docker run -d -p 3000:3000 --name react-app react-app:test'
+                sshagent(credentials: ['SSH']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ubuntu@i10e206.p.ssafy.io
+                        scp /var/jenkins_home/workspace/e206_gitlab/FE/dist.tar ubuntu@i10e206.p.ssafy.io:${HOME_PATH}
+                        
+                        ssh -t ubuntu@i10e206.p.ssafy.io "cd ${HOME_PATH} && tar -xvf dist.tar && sudo cp -r dist/* /var/www/html/"
+                    '''
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,447 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@font-face {
+  font-family: "MaplestoryOTFBold";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/MaplestoryOTFBold.woff")
+    format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.boxControl,
+.boxControl * {
+  box-sizing: border-box;
+}
+
+.rodal-close {
+  width: 30px;
+  height: 30px;
+  background-color: #702503;
+  border-radius: 50%;
+}
+
+/*GameLoading 컴포넌트 -> Countdown 깜빡깜빡하는 CSS*/
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+.blink {
+  animation: blink 1s infinite;
+}
+
+@keyframes dropAnimation {
+  0% {
+    transform: translateY(-100vh); /* 시작 위치: 화면 상단 바깥 */
+    opacity: 0; /* 시작할 때 투명 */
+  }
+  100% {
+    transform: translateY(0); /* 최종 위치: 원래 위치 */
+    opacity: 1; /* 최종적으로 불투명 */
+  }
+}
+
+.drop-animation {
+  animation: dropAnimation 0.5s ease-out forwards; /* 애니메이션: 이름, 지속 시간, 타이밍 함수, 끝난 후 유지 */
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(1px, 1px) rotate(0deg);
+  }
+  10% {
+    transform: translate(-1px, -2px) rotate(-1deg);
+  }
+  20% {
+    transform: translate(-3px, 0px) rotate(1deg);
+  }
+  30% {
+    transform: translate(3px, 2px) rotate(0deg);
+  }
+  40% {
+    transform: translate(1px, -1px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-1px, 2px) rotate(-1deg);
+  }
+  60% {
+    transform: translate(-3px, 1px) rotate(0deg);
+  }
+  70% {
+    transform: translate(3px, 1px) rotate(-1deg);
+  }
+  80% {
+    transform: translate(-1px, -1px) rotate(1deg);
+  }
+  90% {
+    transform: translate(1px, 2px) rotate(0deg);
+  }
+  100% {
+    transform: translate(1px, -2px) rotate(-1deg);
+  }
+}
+
+@keyframes decreaseWidth {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.gauge-bar-container {
+  width: 50%; /* 게이지 바의 전체 너비 */
+  background-color: bg-gray-200; /* 게이지 바 배경색 */
+  border-radius: 5px; /* 필요에 따라 조정 */
+  overflow: hidden;
+}
+
+.gauge-bar {
+  height: 20px; /* 게이지 바의 높이 */
+  background-color: bg-gray-600; /* 게이지 바 색상 */
+  width: 50%; /* 초기 너비 */
+  animation: decreaseWidth 5s linear forwards; /* 5초 동안 너비 감소 */
+}
+
+.shake {
+  animation: shake 0.1s;
+  animation-iteration-count: infinite;
+}
+
+@media (min-width: 768px) {
+  .settingModal > .rodal-zoom-enter {
+    width: 400px !important;
+  }
+
+  .creatingRoom > .rodal-zoom-enter {
+    width: 400px !important;
+  }
+
+  .signup0 > .rodal-zoom-enter {
+    width: 25vw !important;
+    background-size: 25vw 90vh !important;
+  }
+
+  .signup1 {
+    width: 15vw !important;
+    height: 10vh !important;
+    margin-left: 2vw;
+    margin-top: 4vh;
+  }
+
+  .signup2 {
+    margin-top: 4vh;
+  }
+
+  .signup2-1 {
+    background-size: 10vw 15vh !important;
+    width: 10vw;
+    height: 15vh;
+  }
+
+  .signup2-2 {
+    background-size: 10vw 15vh !important;
+    width: 10vw;
+    height: 15vh;
+  }
+
+  .signup2-3 {
+    width: 4vw;
+    height: 9vh;
+  }
+
+  .signup2-4 {
+    background-size: contain !important;
+    padding-top: 0.5vw;
+    width: 20vw !important;
+    height: 5vh !important;
+  }
+
+  .signup3-1 {
+    margin-left: 0vw;
+  }
+  .signup3-2 {
+    font-size: 1vw !important;
+  }
+
+  .signup3-3 {
+    margin-left: 1vw;
+    width: 8vw !important;
+    height: 2.5vh !important;
+  }
+
+  .signup3-4 {
+    width: 3vw;
+    font-size: 0.5vw;
+    margin-left: 0.5vw;
+    padding: 0;
+  }
+
+  .signup3-5 {
+    margin-left: 5vw;
+  }
+
+  .signup4 {
+    margin-top: 3vh;
+    margin-left: -1vw;
+    width: 7vw !important;
+    height: 4vh;
+  }
+
+  .loginContent0 > .rodal-zoom-enter {
+    width: 25vw !important;
+    background-size: 25vw 60vh !important;
+  }
+
+  .loginContent1 {
+    margin-top: 25.5vh;
+    font-size: 3vw;
+  }
+
+  .loginContent2 {
+    margin-top: 3vh;
+    background-size: 18vw 30vh !important;
+  }
+
+  .loginContent3 {
+    margin-top: 10vh;
+  }
+
+  .loginContent4 {
+    width: 10vw;
+    font-size: 1vw;
+  }
+
+  .loginContent5 {
+    margin-top: 2vh;
+    background-size: 8vw 5vh !important;
+    font-size: 1vw;
+  }
+
+  .matchingInfo0 {
+    margin-top: 3vh;
+    font-size: 3vw;
+  }
+
+  .matchingInfo1 {
+    background-size: 30vw 85vh !important;
+    background-position-y: top !important;
+    width: 40vw;
+    height: 85vh;
+    align-items: center;
+  }
+
+  .matchingInfo2 {
+    background-position: center !important;
+    margin-top: 13vh;
+    width: 18vw;
+    height: 6vh;
+    font-size: 1vw;
+  }
+
+  .matchingInfo3 {
+    margin-left: 1vw;
+    width: 5vw !important;
+    height: 5vh !important;
+  }
+
+  .matchingInfo4 {
+    margin-left: -1vw;
+    font-size: 2vw;
+  }
+
+  .matchingInfo5-0 {
+    margin-top: 1vh !important;
+  }
+
+  .matchingInfo5 {
+    margin-left: 0vw;
+    font-size: 1.5vw;
+    margin-top: 0vh;
+  }
+
+  .matchingInfo5-1 {
+    margin-top: 1vh;
+  }
+
+  .matchingInfo7 {
+    margin-right: 5vw;
+    width: 8vw !important;
+  }
+
+  .matchingInfo7-1 {
+    margin-left: 2vw;
+  }
+
+  .matchingInfo8 {
+    background-size: 6vw 7vh !important;
+    width: 6vw !important;
+    height: 7vh !important;
+    font-size: 2.5vw;
+    margin-left: 0;
+  }
+
+  .matchingInfo9 {
+    background-position: center !important;
+    margin-top: 1vh;
+    width: 18vw;
+    height: 6vh;
+  }
+
+  .matchingInfo10 {
+    font-size: 1.5vw;
+    margin-left: 10px;
+  }
+
+  .gameResult1 {
+    background-size: 15vw 8vh !important;
+    width: 15vw !important;
+    height: 8vh !important;
+    font-size: 3vw;
+  }
+
+  .gameResult2 {
+    background-size: 30vw 50vh !important;
+    width: 30vw !important;
+    height: 50vh !important;
+  }
+
+  .gameResult3 {
+    background-size: 25vw 25vh !important;
+    background-position: center;
+    width: 25vw !important;
+    height: 25vh !important;
+  }
+
+  .gameResult4 {
+    width: 13vw !important;
+    height: 7vh !important;
+    font-size: 2vw;
+  }
+
+  .gameResult5 {
+    background-size: cover !important;
+    background-position: center;
+    width: 25vw !important;
+    height: 25vh !important;
+  }
+
+  .gameResult6 {
+    margin-top: -1vh;
+    font-size: 1.5vw;
+    margin-right: 2vw;
+  }
+
+  .gameResult8 {
+    background-size: contain !important;
+    background-position: center;
+    width: 3vw !important;
+    height: 3vh !important;
+    font-size: 1vw;
+    margin-left: 1vw;
+    padding-right: 0.5vw;
+  }
+
+  .gameResult9 {
+    background-size: contain !important;
+    background-position: center;
+    width: 3vw !important;
+    height: 3vh !important;
+    font-size: 1vw;
+    margin-left: 1.5vw;
+    padding-right: 0.5vw;
+  }
+
+  .gameResult10 {
+    background-size: contain !important;
+    background-position: center;
+    width: 3vw !important;
+    height: 3vh !important;
+    font-size: 1vw;
+    margin-left: 2vw;
+    padding-right: 0.5vw;
+  }
+
+  .gameResult11 {
+    background-size: contain !important;
+    background-position: center;
+    width: 10vw !important;
+    display: flex;
+    align-items: center;
+    margin-left: 0;
+    font-size: 15px;
+  }
+
+  .gameResult12 {
+    font-size: 2.5vw;
+    margin-left: 0vw;
+  }
+
+  .gameResult13 {
+    font-size: 1.5vw;
+    margin-left: 4vw;
+    margin-top: -1vw;
+  }
+
+  .gameResult14 {
+    align-items: start;
+    margin-top: -2vh;
+    margin-left: -2vw;
+  }
+
+  .gameResult15 {
+    width: 15vw !important;
+    height: 20vh !important;
+    margin-top: 2vh;
+  }
+  .gameResult16 {
+    background-size: 25vw 8vh !important;
+    background-position: center;
+    width: 25vw 8vh !important;
+  }
+  .gameResult17 {
+    font-size: 1vw !important;
+  }
+  .gameResult18 {
+    width: 15vw;
+    height: 3vh;
+  }
+
+  .gameResult19 {
+    width: 10vw;
+    height: 5vh;
+    margin-top: 1vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2vw;
+  }
+
+  .waitingRoom0 {
+    /* background-size: 20vw 10vh !important;
+    /* background-position: center center; */
+    width: 5vw 10vh !important;
+  }
+
+  .waitingRoom1 {
+    font-size: 2vw;
+    margin-top: -1vh;
+  }
+
+  .waitingRoom2 {
+    font-size: 1vw;
+    margin-top: -1.5vh;
+  }
+
+  .waitingRoom3 {
+    background-size: 3vw 10vh !important;
+    background-position: center;
+    width: 3vw 10vh !important;
+  }
+}
